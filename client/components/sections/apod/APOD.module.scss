@@ -1,0 +1,31 @@
+.APOD{
+    @apply w-full overflow-hidden isolate;
+}
+.APODWrapper{
+    @apply relative w-[120%] rounded-b-[50%] bg-no-repeat bg-[length:85%_auto] translate-x-[calc(-100%/120*10)] mix-blend-multiply overflow-hidden pt-4 pb-[280px] min-h-screen;
+}
+.APODWrapper::before{
+    @apply content-[''] mix-blend-multiply absolute top-0 left-0 w-full h-full;
+}
+.APODContent{
+    @apply mt-14 text-center mix-blend-normal;
+
+    input[type=image] {
+        @apply btn-caramel rounded-[50%] w-20 h-20 invisible opacity-0 transition-opacity;
+
+        &.show{
+            visibility: visible;
+            opacity: 1;
+        }
+
+    }
+}
+.APODContent {
+    & > h1 {
+        @apply title-white mt-11;
+    }
+    & > p {
+        @apply text-white text-2xl mt-2.5;
+    }
+
+}

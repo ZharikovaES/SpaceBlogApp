@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Nunito";
+    src: url("/fonts/Nunito-Regular.eot");
+    src: url("/fonts/Nunito-Regular.woff2") format("woff2"), url('/fonts/Nunito-Regular.woff') format('woff'), url('/fonts/Nunito-Regular.ttf') format('truetype'), url("/fonts/Nunito-Regular.svg") format("svg");
+    font-weight: 400;
+    font-display: swap;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Nunito";
+    src: url('/fonts/Nunito-Bold.eot');
+    src: url('/fonts/Nunito-Bold.woff2') format('woff2'), url('/fonts/Nunito-Bold.woff') format('woff'), url('/fonts/Nunito-Bold.ttf') format('truetype'), url('/fonts/Nunito-Bold.svg') format('svg');
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+  }
+}
+
+@layer components {
+  .btn-caramel{
+    @apply bg-caramel py-[12px] px-[32px] rounded-[40px] text-white text-lg;
+  }
+  .btn-transparent{
+    @apply bg-transparent py-[12px] px-[32px] rounded-[40px] text-white text-lg border-2 border-white;
+  }
+  .title-white{
+    @apply text-white font-bold text-7xl drop-shadow-[4px_2px_4px_rgba(0,0,0,0.25)];
+  }
+  .title-black{
+    @apply text-brown font-bold text-6xl;
+  }
+  .title-brown{
+    @apply text-brown font-bold text-5xl;
+  }
+  .title-gray{
+    @apply text-gray font-bold text-5xl;
+  }
+  .subtitle-white{
+    @apply text-white font-bold text-2xl;
+  }
+  .subtitle-black{
+    @apply text-black font-bold text-2xl;
+  }
+  .subtitle-caramel{
+    @apply text-caramel font-bold text-2xl;
+  }
+  .subtitle-gray{
+    @apply text-gray font-bold text-3xl;
+  }
+
+  .no-filter{
+    @apply relative z-20;
+  }
+}
+
+
+html,
+body,
+h1, h2, h3, h4, h5, p {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  @apply font-nunito text-light-gray;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+*,*::before,*::after {
+  box-sizing: border-box;
+}

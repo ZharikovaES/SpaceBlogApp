@@ -1,0 +1,6 @@
+.header{
+    @apply text-white;
+}
+.headerInner{
+    @apply flex justify-between items-center;
+}

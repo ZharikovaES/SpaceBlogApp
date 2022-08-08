@@ -1,0 +1,8 @@
+.navbar {
+    @apply text-lg;
+}
+.navbarList{
+    @apply flex items-center space-x-12;
+}
+.navbarItem {
+}
