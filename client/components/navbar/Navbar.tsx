@@ -12,9 +12,7 @@ const Navbar: FC = () => {
           <Link
             href="/"
           >
-            <a>
-              Features
-            </a>
+            Features
           </Link>
         </li>
         <li
@@ -23,9 +21,7 @@ const Navbar: FC = () => {
           <Link
             href="/"
           >
-            <a>
-              Products
-            </a>
+            Products
           </Link>
         </li>
         <li
@@ -34,9 +30,7 @@ const Navbar: FC = () => {
           <Link
             href="/"
           >
-            <a>
-              Testimonial
-            </a>
+            Testimonial
           </Link>
         </li>
         <li
@@ -45,9 +39,7 @@ const Navbar: FC = () => {
           <Link
             href="/"
           >
-            <a>
-              Contact
-            </a>
+            Contact
           </Link>
         </li>
       </ul>
