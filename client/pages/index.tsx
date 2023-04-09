@@ -1,6 +1,5 @@
 import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Header from '../components/header/Header'
 import APOD from '../components/sections/apod/APOD'
 import NASAService from '../API/NASAService'
