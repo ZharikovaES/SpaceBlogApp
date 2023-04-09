@@ -1,8 +1,8 @@
 .navbar {
-    @apply text-lg;
+  @apply text-lg;
 }
 .navbarList{
-    @apply flex items-center space-x-12;
+  @apply flex items-center space-x-12;
 }
 .navbarItem {
 }

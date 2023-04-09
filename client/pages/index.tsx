@@ -1,14 +1,24 @@
-import type { GetServerSideProps, NextPage } from 'next'
+import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from '../components/header/Header'
 import APOD from '../components/sections/apod/APOD'
 import NASAService from '../API/NASAService'
-import { IAPOD } from '../types/APOD'
 
-const Home: NextPage<{
-        apod: IAPOD
-      }> = ({ apod }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const data = await NASAService.getAPOD();
+  const now = new Date();
+  const currentDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+  return {
+    props: {
+      apod: data,
+      currentDate: currentDate.toISOString()
+    }
+  }
+}
+
+const Home: NextPage = ({ apod, currentDate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
@@ -18,6 +28,7 @@ const Home: NextPage<{
       </Head>
       <APOD
         data={apod}
+        currentDate={currentDate}
       >
         <Header/>
       </APOD>
@@ -25,14 +36,5 @@ const Home: NextPage<{
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await NASAService.getAPOD();
-
-  return {
-    props: {
-      apod: data
-    }
-  }
-}
 
 export default Home;

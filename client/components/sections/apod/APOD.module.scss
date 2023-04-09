@@ -1,31 +1,44 @@
 .APOD{
-    @apply w-full overflow-hidden isolate;
+  @apply w-full overflow-hidden isolate;
 }
 .APODWrapper{
-    @apply relative w-[120%] rounded-b-[50%] bg-no-repeat bg-[length:85%_auto] translate-x-[calc(-100%/120*10)] mix-blend-multiply overflow-hidden pt-4 pb-[280px] min-h-screen;
-}
-.APODWrapper::before{
+  @apply relative w-[120%] rounded-b-[50%] bg-no-repeat bg-[length:85%_auto] translate-x-[calc(-100%/120*10)] mix-blend-multiply overflow-hidden pt-4 pb-[280px] min-h-screen;
+
+  &::before{
     @apply content-[''] mix-blend-multiply absolute top-0 left-0 w-full h-full;
+  }
+}
+.APODImgWrapper{
+  @apply absolute inset-0;
+  img{
+      
+  }
 }
 .APODContent{
-    @apply mt-14 text-center mix-blend-normal;
+  @apply mt-14 text-center mix-blend-normal;
 
-    input[type=image] {
-        @apply btn-caramel rounded-[50%] w-20 h-20 invisible opacity-0 transition-opacity;
+  input[type=image] {
+    @apply btn-caramel rounded-[50%] w-20 h-20 invisible opacity-0 transition-opacity;
 
-        &.show{
-            visibility: visible;
-            opacity: 1;
-        }
-
+    &.show{
+      visibility: visible;
+      opacity: 1;
     }
+  }
+  & > h1 {
+    @apply title-white mt-11;
+  }
+  & > p {
+    @apply text-white text-2xl mt-2.5;
+  }
 }
-.APODContent {
-    & > h1 {
-        @apply title-white mt-11;
-    }
-    & > p {
-        @apply text-white text-2xl mt-2.5;
-    }
+.APODDatePickerWrapper{
+  @apply inline-flex items-center justify-center btn-transparent py-0 pr-0 mt-4 text-caramel;
 
+  span {
+    @apply text-white mr-4 whitespace-nowrap;
+  }
+}
+.APODDatePicker input {
+  @apply rounded-[40px] px-6 py-3 border-2 border-white my-[-2px] mr-[-2px] outline-none text-center;
 }

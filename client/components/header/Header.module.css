@@ -1,6 +1,6 @@
 .header{
-    @apply text-white;
+  @apply text-white;
 }
 .headerInner{
-    @apply flex justify-between items-center;
+  @apply flex justify-between items-center;
 }
