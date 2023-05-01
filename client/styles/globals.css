@@ -21,44 +21,6 @@
   }
 }
 
-@layer components {
-  .btn-caramel{
-    @apply bg-caramel py-[12px] px-[32px] rounded-[40px] text-white text-lg;
-  }
-  .btn-transparent{
-    @apply bg-transparent py-[12px] px-[32px] rounded-[40px] text-white text-lg border-2 border-white;
-  }
-  .title-white{
-    @apply text-white font-bold text-7xl drop-shadow-[4px_2px_4px_rgba(0,0,0,0.25)];
-  }
-  .title-black{
-    @apply text-brown font-bold text-6xl;
-  }
-  .title-brown{
-    @apply text-brown font-bold text-5xl;
-  }
-  .title-gray{
-    @apply text-gray font-bold text-5xl;
-  }
-  .subtitle-white{
-    @apply text-white font-bold text-2xl;
-  }
-  .subtitle-black{
-    @apply text-black font-bold text-2xl;
-  }
-  .subtitle-caramel{
-    @apply text-caramel font-bold text-2xl;
-  }
-  .subtitle-gray{
-    @apply text-gray font-bold text-3xl;
-  }
-
-  .no-filter{
-    @apply relative z-20;
-  }
-}
-
-
 html,
 body,
 h1, h2, h3, h4, h5, p {
@@ -77,4 +39,25 @@ a {
 
 *,*::before,*::after {
   box-sizing: border-box;
+}
+
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.close {
+  @apply relative block;
+
+  &::before, &::after {
+    @apply content-[''] absolute block top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-caramel w-5 h-0.5 rounded-[1px];
+  }
+
+  &::before {
+    @apply rotate-45;
+  }
+  &::after {
+    @apply -rotate-45;
+  }
 }

@@ -1,13 +1,22 @@
-import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import Head from 'next/head'
-import Header from '../components/header/Header'
-import APOD from '../components/sections/apod/APOD'
-import NASAService from '../API/NASAService'
+import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
+import Head from 'next/head';
+import Header from '../components/header/Header';
+import APOD from '../components/sections/apod/APOD';
+import NASAService from '../API/NASAService';
+import { IImageAPOD, IVideoAPOD, mediaType } from '../types/APOD';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data = await NASAService.getAPOD();
+  const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();
   const now = new Date();
   const currentDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+  if (data) {
+    let imageURL: string = "";
+    if (data?.media_type === mediaType.IMAGE) imageURL = (data as IImageAPOD).hdurl;
+    else if (data?.media_type === mediaType.VIDEO) imageURL = (data as IVideoAPOD).thumbnail_url;
+
+    data.urlImg = imageURL;
+  }
 
   return {
     props: {

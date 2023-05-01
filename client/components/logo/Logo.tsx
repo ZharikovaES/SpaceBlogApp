@@ -5,12 +5,9 @@ const Logo: FC = () => {
   return (
     <Link
       href="/"
+      className="text-2xl font-bold"
     >
-      <a
-          className="text-2xl font-bold"
-      >
-          SpaceBlog
-      </a>
+      SpaceBlog
     </Link>
   );
 }

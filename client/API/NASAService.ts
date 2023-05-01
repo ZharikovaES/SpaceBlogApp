@@ -1,9 +1,9 @@
 import axios from "axios";
-import { IAPOD } from "../types/APOD";
+import { IAPOD, IImageAPOD, IVideoAPOD } from "../types/APOD";
 
 export default class NASAService {
   //получение астрономического фото/видео дня
-  static async getAPOD(date: Date = new Date()): Promise<IAPOD | null>{
+  static async getAPOD(date: Date = new Date()): Promise<IImageAPOD | IVideoAPOD | null>{
     try {
       const month = date.getUTCMonth() + 1;
       const day = date.getUTCDate();
@@ -19,7 +19,7 @@ export default class NASAService {
                                               api_key: process.env.nasaKey 
                                           }
                                       });
-      const data : IAPOD = response?.data;
+      const data : IAPOD = response?.data;      
       
       if (Array.isArray(data) && data?.length)
         return data[0];

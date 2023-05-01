@@ -1,9 +1,12 @@
 import React, { FC, useCallback, useEffect, useState } from "react";
 import { IAPOD, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
 import Container from "../../layout/Container";
+
 import classes from "./APOD.module.scss";
-import { animated, AnimationResult, easings, SpringValue, useSpring, useSprings } from 'react-spring';
+import { animated, AnimationResult, easings, SpringValue, useSpring } from "@react-spring/web";
 import DatePicker, { registerLocale } from "react-datepicker";
+
+import PopUpVideo from "../../pop-up/PopUpVideo";
 
 import "react-datepicker/dist/react-datepicker.css";
 import { parseISO, subYears } from "date-fns";
@@ -17,15 +20,15 @@ registerLocale('ru', ru);
 
 const APOD: FC<{
   children: React.ReactNode
-  data: IAPOD,
+  data: IImageAPOD | IVideoAPOD,
   currentDate: string
 }> = ({ children, data, currentDate }) => {
   
   const [isFinishedAnimation, setIsFinishedAnimation] = useState(false);
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
   const [isLoadedImg, setLoadedImg] = useState(false);
-  const [apod, setAPOD] = useState<IAPOD>(data);
-  const [hiddenApod, setHiddenAPOD] = useState<IAPOD | null>(null);
+  const [apod, setAPOD] = useState<IImageAPOD | IVideoAPOD>(data);
+  const [hiddenApod, setHiddenAPOD] = useState<IImageAPOD | IVideoAPOD | null>(null);
   const [sizeOfImage, setSizeOfImage] = useState<{
     width: number,
     height: number
@@ -83,8 +86,17 @@ const APOD: FC<{
     }
   }));
 
+  //pop-up
+
+  const [modal, setModal] = useState(false);
+
+  const openModal = () => {
+    setModal(!modal);
+  };
+
+
   useEffect(() => {
-    if (hiddenApod?.url === apod.url && isLoadedImg) {
+    if (hiddenApod?.urlImg === apod.urlImg && isLoadedImg) {
       apiBgOpacity.start({
         from: {
           opacity: 0
@@ -93,7 +105,7 @@ const APOD: FC<{
       });
     }
 
-    if (hiddenApod?.url === apod.url && apod.title && isLoadedImg) {       
+    if (hiddenApod?.urlImg === apod.urlImg && apod.title && isLoadedImg) {       
       apiContent.start({
         from: {
           opacity: 0,
@@ -119,11 +131,20 @@ const APOD: FC<{
     const getAPOD = async () => {
       if (isFinishedAnimation && isFinishedAnimationBg && date) {
         const data = await NASAService.getAPOD(date);
+
+        console.log(data);
+        
         if (data) {
           let imageURL: string = "";
+          let videoURL: string = "";
           if (data?.media_type === mediaType.IMAGE) imageURL = (data as IImageAPOD).hdurl;
-          else if (data?.media_type === mediaType.VIDEO) imageURL = (data as IVideoAPOD).thumbnail_url;
-          setHiddenAPOD({ ...data,  url: imageURL });
+          else if (data?.media_type === mediaType.VIDEO) {
+            imageURL = (data as IVideoAPOD).thumbnail_url;
+            videoURL = (data as IVideoAPOD).url;
+          }
+          console.log(imageURL);
+          
+          setHiddenAPOD({ ...data,  urlImg: imageURL, urlVideo: videoURL });
         }
       }
     }
@@ -166,8 +187,8 @@ return (
             placeholder="blur"
             alt={apod.title}
             priority={true}
-            src={apod.url}
-            blurDataURL={apod.url}
+            src={apod.urlImg}
+            blurDataURL={apod.urlImg}
             onLoadingComplete={({naturalWidth, naturalHeight}) => {
               setSizeOfImage({
                 width: naturalWidth,
@@ -187,7 +208,7 @@ return (
             className={classes.APODContent + " no-filter"}
             style={propsContent}
           >
-            <input type="image" src="/images/icons/arrow-white.svg" className={apod.media_type === mediaType.VIDEO ? classes.show : ""} alt="Смотреть"></input>
+            <input type="image" src="/images/icons/arrow-white.svg" onClick={openModal} className={apod.media_type === mediaType.VIDEO ? classes.show : ""} alt="Смотреть"></input>
             <h1>{ apod.media_type === mediaType.IMAGE ? "Фото" : "Видео" } дня</h1>
             <div className={classes.APODDatePickerWrapper}>
               <span>Выберите дату</span>
@@ -220,6 +241,11 @@ return (
           </animated.div>
         </Container>
       </animated.div>
+      { modal && <PopUpVideo 
+                        title={(apod as IVideoAPOD).title} 
+                        setModal={setModal} 
+                        url={(apod as IVideoAPOD).urlVideo}
+                  /> }
     </div>
   );
 }
