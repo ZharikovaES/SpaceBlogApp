@@ -12,7 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { parseISO, subYears } from "date-fns";
 import ru from 'date-fns/locale/ru';
 import NASAService from "../../../API/NASAService";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { Lookup } from "@react-spring/types";
 registerLocale('ru', ru);
 
@@ -131,8 +131,6 @@ const APOD: FC<{
     const getAPOD = async () => {
       if (isFinishedAnimation && isFinishedAnimationBg && date) {
         const data = await NASAService.getAPOD(date);
-
-        console.log(data);
         
         if (data) {
           let imageURL: string = "";
@@ -142,7 +140,6 @@ const APOD: FC<{
             imageURL = (data as IVideoAPOD).thumbnail_url;
             videoURL = (data as IVideoAPOD).url;
           }
-          console.log(imageURL);
           
           setHiddenAPOD({ ...data,  urlImg: imageURL, urlVideo: videoURL });
         }
@@ -169,84 +166,86 @@ const APOD: FC<{
   }, [sizeOfImage]);  
   
 return (
-    <div 
-      className={classes.APOD} 
+  <div 
+    className={classes.APOD} 
+  >
+    <animated.div 
+      className={classes.APODWrapper} 
+      style={propsBgOpacity}
     >
-      <animated.div 
-        className={classes.APODWrapper} 
-        style={propsBgOpacity}
+      <div
+        className={classes.APODImgWrapper}
       >
-        <div
-          className={classes.APODImgWrapper}
+        <Image
+          placeholder="blur"
+          alt={apod.title}
+          priority={true}
+          src={apod.urlImg}
+          blurDataURL={apod.urlImg}
+          onLoadingComplete={({naturalWidth, naturalHeight}) => {
+            setSizeOfImage({
+              width: naturalWidth,
+              height: naturalHeight
+            });              
+            setLoadedImg(true);
+          }}
+          fill
+          sizes="100vw"
+          style={{
+            transition: "object-position 3s",
+            objectFit: "cover",
+            objectPosition: `${positionOfImage.x}% ${positionOfImage.y}%`
+          }} /> 
+      </div>
+      <div
+        className="no-filter"
+      >
+        { children }
+      </div>
+      <Container>
+        <animated.div 
+          className={classes.APODContent + " no-filter"}
+          style={propsContent}
         >
-          <Image
-            layout="fill"
-            objectFit="cover"
-            style={{transition: "object-position 3s"}}
-            objectPosition={`${positionOfImage.x}% ${positionOfImage.y}%`}
-            placeholder="blur"
-            alt={apod.title}
-            priority={true}
-            src={apod.urlImg}
-            blurDataURL={apod.urlImg}
-            onLoadingComplete={({naturalWidth, naturalHeight}) => {
-              setSizeOfImage({
-                width: naturalWidth,
-                height: naturalHeight
-              });              
-              setLoadedImg(true);
-            }}
-          /> 
-        </div>
-        <div
-          className="no-filter"
-        >
-          { children }
-        </div>
-        <Container>
-          <animated.div 
-            className={classes.APODContent + " no-filter"}
-            style={propsContent}
-          >
-            <input type="image" src="/images/icons/arrow-white.svg" onClick={openModal} className={apod.media_type === mediaType.VIDEO ? classes.show : ""} alt="Смотреть"></input>
-            <h1>{ apod.media_type === mediaType.IMAGE ? "Фото" : "Видео" } дня</h1>
-            <div className={classes.APODDatePickerWrapper}>
-              <span>Выберите дату</span>
-              <DatePicker
-                onChange={(date: Date) => {
-                  apiContent.start({
-                    reverse: true
-                  });       
-                  apiBgOpacity.start({
-                    reverse: true
-                  });                 
-                  setDate(date);
-                }}
-                selected={date}
-                includeDateIntervals={[{ 
-                  start: subYears(date, 10),
-                  end: new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000)
-                }]}
-                closeOnScroll={true}
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-                locale="ru"
-                dateFormat="yyyy-MM-dd"
-                wrapperClassName={classes.APODDatePicker}
-              />
-            </div>
-            <h2 className="subtitle-white mt-4">{ apod.title }</h2>
-            <p>{ apod.explanation }</p>
-          </animated.div>
-        </Container>
-      </animated.div>
-      { modal && <PopUpVideo 
-                        title={(apod as IVideoAPOD).title} 
-                        setModal={setModal} 
-                        url={(apod as IVideoAPOD).urlVideo}
-                  /> }
-    </div>
-  );
+          <input type="image" src="/images/icons/arrow-white.svg" onClick={openModal} className={apod.media_type === mediaType.VIDEO ? classes.show : ""} alt="Смотреть"></input>
+          <h1>{ apod.media_type === mediaType.IMAGE ? "Фото" : "Видео" } дня</h1>
+          <div className={classes.APODDatePickerWrapper}>
+            <span>Выберите дату</span>
+            <DatePicker
+              onChange={(date: Date) => {
+                apiContent.start({
+                  reverse: true
+                });       
+                apiBgOpacity.start({
+                  reverse: true
+                });                 
+                setDate(date);
+              }}
+              selected={date}
+              includeDateIntervals={[{ 
+                start: subYears(date, 10),
+                end: new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000)
+              }]}
+              closeOnScroll={true}
+              showMonthDropdown
+              showYearDropdown
+              dropdownMode="select"
+              locale="ru"
+              dateFormat="yyyy-MM-dd"
+              wrapperClassName={classes.APODDatePicker}
+            />
+          </div>
+          <h2 className="subtitle-white mt-4">{ apod.title }</h2>
+          <p>{ apod.explanation }</p>
+        </animated.div>
+      </Container>
+    </animated.div>
+    { modal && <PopUpVideo 
+                      title={(apod as IVideoAPOD).title} 
+                      setModal={setModal} 
+                      url={(apod as IVideoAPOD).urlVideo}
+                /> }
+  </div>
+);
 }
 export default APOD;

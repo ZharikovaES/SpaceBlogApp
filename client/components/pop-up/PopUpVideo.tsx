@@ -24,9 +24,9 @@ const PopUpVideo: FC<{
                   onClick={() => { setModal(false) }}
                 ></button>
                 <div className={classes.modalVideoAlign}>
-                  {!videoLoading ? (
+                  {videoLoading &&
                     <img className={classes.modalSpinner} src="/images/icons/loader.svg"/>
-                  ) : null}
+                  }
                   <iframe
                     className={classes.modalVideoStyle}
                     onLoad={spinner}
