@@ -12,7 +12,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { parseISO, subYears } from "date-fns";
 import ru from 'date-fns/locale/ru';
 import NASAService from "../../../API/NASAService";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { Lookup } from "@react-spring/types";
 registerLocale('ru', ru);
 
