@@ -16,3 +16,8 @@ export enum mediaType {
   IMAGE = "image",
   VIDEO = "video"
 }
+
+export type PositionBackground = {
+  x: number,
+  y: number
+}

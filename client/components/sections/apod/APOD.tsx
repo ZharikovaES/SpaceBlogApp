@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect, useState } from "react";
-import { IAPOD, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
+import React, { FC, useEffect, useState } from "react";
+import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
 import Container from "../../layout/Container";
 
 import classes from "./APOD.module.scss";
@@ -25,6 +25,7 @@ const APOD: FC<{
 }> = ({ children, data, currentDate }) => {  
   const [isFinishedAnimation, setIsFinishedAnimation] = useState(false);
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
+  const [timeAnimationBg, setTimeAnimationBg] = useState(15);
   const [isLoadedImg, setLoadedImg] = useState(false);
   const [apod, setAPOD] = useState<IImageAPOD | IVideoAPOD>(data);
   const [hiddenApod, setHiddenAPOD] = useState<IImageAPOD | IVideoAPOD | null>(null);
@@ -35,10 +36,7 @@ const APOD: FC<{
     width: 0,
     height: 0
   });    
-  const [positionOfImage, setPositionOfImage] = useState<{
-    x: number,
-    y: number
-  }>({ 
+  const [positionOfImage, setPositionOfImage] = useState<PositionBackground>({ 
     x: 0,
     y: 0
   });    
@@ -150,14 +148,32 @@ const APOD: FC<{
   useEffect(() => {
     let i: NodeJS.Timer | null = null;
     if (sizeOfImage.width && sizeOfImage.height) {
+      const aspectRatio = sizeOfImage.width > sizeOfImage.height ? sizeOfImage.width / sizeOfImage.height : sizeOfImage.height / sizeOfImage.width;
+      
+      setTimeAnimationBg(aspectRatio * 12);
       setPositionOfImage({ x: 0, y: 0});
       
+      const callbackSetPositionOfImage = (positionOfImage: PositionBackground) => {
+        const newPositionOfImage: PositionBackground = {
+          x: positionOfImage.x,
+          y: positionOfImage.y
+        };
+
+        if (sizeOfImage.width > sizeOfImage.height) {
+          newPositionOfImage.x = Math.abs(positionOfImage.x - 100);
+        }
+        else {
+          newPositionOfImage.y = Math.abs(positionOfImage.y - 100);
+        }
+        
+        return newPositionOfImage;
+      };
+
+      setPositionOfImage(callbackSetPositionOfImage);
+      
       i = setInterval(() => {  
-                    if (sizeOfImage.width > sizeOfImage.height)
-                        setPositionOfImage(positionOfImage => ({...positionOfImage, x: Math.abs(positionOfImage.x - 100)}));
-                    else setPositionOfImage(positionOfImage => ({...positionOfImage, y: Math.abs(positionOfImage.y - 100)}));
-                      
-                  }, 3000);
+            setPositionOfImage(callbackSetPositionOfImage);
+          }, timeAnimationBg * 1000);
     }
     return () => {
       if (i) clearInterval(i);
@@ -191,7 +207,7 @@ return (
           fill
           sizes="100vw"
           style={{
-            transition: "object-position 3s",
+            transition: `object-position ${timeAnimationBg}s`,
             objectFit: "cover",
             objectPosition: `${positionOfImage.x}% ${positionOfImage.y}%`
           }} /> 
