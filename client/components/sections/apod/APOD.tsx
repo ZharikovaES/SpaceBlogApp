@@ -22,8 +22,7 @@ const APOD: FC<{
   children: React.ReactNode
   data: IImageAPOD | IVideoAPOD,
   currentDate: string
-}> = ({ children, data, currentDate }) => {
-  
+}> = ({ children, data, currentDate }) => {  
   const [isFinishedAnimation, setIsFinishedAnimation] = useState(false);
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
   const [isLoadedImg, setLoadedImg] = useState(false);
@@ -129,7 +128,7 @@ const APOD: FC<{
 
   useEffect(() => {
     const getAPOD = async () => {
-      if (isFinishedAnimation && isFinishedAnimationBg && date) {
+      if (isFinishedAnimation && isFinishedAnimationBg && date) {        
         const data = await NASAService.getAPOD(date);
         
         if (data) {
@@ -224,7 +223,7 @@ return (
               selected={date}
               includeDateIntervals={[{ 
                 start: subYears(date, 10),
-                end: new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000)
+                end: new Date(currentDate)
               }]}
               closeOnScroll={true}
               showMonthDropdown

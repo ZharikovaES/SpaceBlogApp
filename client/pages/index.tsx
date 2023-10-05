@@ -6,9 +6,11 @@ import NASAService from '../API/NASAService';
 import { IImageAPOD, IVideoAPOD, mediaType } from '../types/APOD';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();
+  const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();  
+  const options = { timeZone: 'America/New_York' };
   const now = new Date();
-  const currentDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+  const currentDateStr = now.toLocaleString('en-US', options);
+  const currentDate = new Date(currentDateStr).toISOString();
 
   if (data) {
     let imageURL: string = "";
@@ -21,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       apod: data,
-      currentDate: currentDate.toISOString()
+      currentDate: currentDate
     }
   }
 }
