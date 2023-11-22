@@ -9,20 +9,24 @@ import DatePicker, { registerLocale } from "react-datepicker";
 import PopUpVideo from "../../pop-up/PopUpVideo";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { parseISO, subYears } from "date-fns";
+import { subYears } from "date-fns";
 import ru from 'date-fns/locale/ru';
 import NASAService from "../../../API/NASAService";
 import Image from "next/image";
 import { Lookup } from "@react-spring/types";
+import { useDispatch, useSelector } from "react-redux";
+import { StateDate } from "../../../store/dateStore";
 registerLocale('ru', ru);
 
 //компонент с астрономическим фото/видео дня
 
 const APOD: FC<{
   children: React.ReactNode
-  data: IImageAPOD | IVideoAPOD,
-  currentDate: string
-}> = ({ children, data, currentDate }) => {  
+  data: IImageAPOD | IVideoAPOD
+}> = ({ children, data }) => {  
+  const selectedDate = useSelector((state: StateDate ) => state.selectedDate);
+  const currentDate = useSelector((state: StateDate ) => state.currentDate);
+
   const [isFinishedAnimation, setIsFinishedAnimation] = useState(false);
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
   const [timeAnimationBg, setTimeAnimationBg] = useState(15);
@@ -40,7 +44,6 @@ const APOD: FC<{
     x: 0,
     y: 0
   });    
-  const [date, setDate] = useState(parseISO(currentDate));
   
   const [propsBgOpacity, apiBgOpacity] = useSpring(() => ({
     to: {
@@ -124,10 +127,10 @@ const APOD: FC<{
     }
   }, [hiddenApod, isFinishedAnimation, isFinishedAnimationBg]);
 
-  useEffect(() => {
+  useEffect(() => {  
     const getAPOD = async () => {
-      if (isFinishedAnimation && isFinishedAnimationBg && date) {        
-        const data = await NASAService.getAPOD(date);
+      if (isFinishedAnimation && isFinishedAnimationBg && selectedDate) {        
+        const data = await NASAService.getAPOD(selectedDate);
         
         if (data) {
           let imageURL: string = "";
@@ -143,7 +146,7 @@ const APOD: FC<{
       }
     }
     getAPOD();
-  }, [isFinishedAnimation, isFinishedAnimationBg, date]);
+  }, [isFinishedAnimation, isFinishedAnimationBg, selectedDate]);
 
   useEffect(() => {
     let i: NodeJS.Timer | null = null;
@@ -178,7 +181,12 @@ const APOD: FC<{
     return () => {
       if (i) clearInterval(i);
     }
-  }, [sizeOfImage]);  
+  }, [sizeOfImage]);
+
+  const dispatch = useDispatch();
+  const foo = useSelector((state: StateDate ) => state.selectedDate);
+  console.log(foo);
+  
   
 return (
   <div 
@@ -234,11 +242,11 @@ return (
                 apiBgOpacity.start({
                   reverse: true
                 });                 
-                setDate(date);
+                dispatch({type: "UPDATE_SELECTED_DATE", payload: date})
               }}
-              selected={date}
+              selected={selectedDate}
               includeDateIntervals={[{ 
-                start: subYears(date, 10),
+                start: subYears(selectedDate, 10),
                 end: new Date(currentDate)
               }]}
               closeOnScroll={true}

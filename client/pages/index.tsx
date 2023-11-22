@@ -1,16 +1,14 @@
 import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 import Head from 'next/head';
+import withRedux from 'next-redux-wrapper';
 import Header from '../components/header/Header';
 import APOD from '../components/sections/apod/APOD';
 import NASAService from '../API/NASAService';
 import { IImageAPOD, IVideoAPOD, mediaType } from '../types/APOD';
+import { makeDateStore } from '../store/dateStore';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();  
-  const options = { timeZone: 'America/New_York' };
-  const now = new Date();
-  const currentDateStr = now.toLocaleString('en-US', options);
-  const currentDate = new Date(currentDateStr).toISOString();
 
   if (data) {
     let imageURL: string = "";
@@ -22,13 +20,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      apod: data,
-      currentDate: currentDate
+      apod: data
     }
   }
 }
 
-const Home: NextPage = ({ apod, currentDate }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const Home: NextPage = ({ apod }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <>
       <Head>
@@ -38,7 +35,6 @@ const Home: NextPage = ({ apod, currentDate }: InferGetServerSidePropsType<typeo
       </Head>
       <APOD
         data={apod}
-        currentDate={currentDate}
       >
         <Header/>
       </APOD>
@@ -46,5 +42,4 @@ const Home: NextPage = ({ apod, currentDate }: InferGetServerSidePropsType<typeo
   )
 }
 
-
-export default Home;
+export default withRedux(makeDateStore)(Home);
