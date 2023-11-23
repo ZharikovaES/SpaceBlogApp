@@ -1,21 +1,23 @@
 import React, { FC, useEffect, useState } from "react";
-import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
-import Container from "../../layout/Container";
-
-import classes from "./APOD.module.scss";
+import Image from "next/image";
 import { animated, AnimationResult, easings, SpringValue, useSpring } from "@react-spring/web";
+import { useDispatch, useSelector } from "react-redux";
 import DatePicker, { registerLocale } from "react-datepicker";
-
-import PopUpVideo from "../../pop-up/PopUpVideo";
-
 import "react-datepicker/dist/react-datepicker.css";
 import { subYears } from "date-fns";
 import ru from 'date-fns/locale/ru';
-import NASAService from "../../../API/NASAService";
-import Image from "next/image";
+
 import { Lookup } from "@react-spring/types";
-import { useDispatch, useSelector } from "react-redux";
-import { StateDate } from "../../../store/dateStore";
+import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
+import { StateDate } from "../../../types/store/date";
+
+import { updateSelectedDate } from "../../../store/dateReducer";
+import NASAService from "../../../API/NASAService";
+import Container from "../../layout/Container";
+import PopUpVideo from "../../pop-up/PopUpVideo";
+
+import classes from "./APOD.module.scss";
+
 registerLocale('ru', ru);
 
 //компонент с астрономическим фото/видео дня
@@ -24,6 +26,8 @@ const APOD: FC<{
   children: React.ReactNode
   data: IImageAPOD | IVideoAPOD
 }> = ({ children, data }) => {  
+  const dispatch = useDispatch();  
+
   const selectedDate = useSelector((state: StateDate ) => state.selectedDate);
   const currentDate = useSelector((state: StateDate ) => state.currentDate);
 
@@ -87,13 +91,11 @@ const APOD: FC<{
   }));
 
   //pop-up
-
   const [modal, setModal] = useState(false);
 
   const openModal = () => {
     setModal(!modal);
   };
-
 
   useEffect(() => {
     if (hiddenApod?.urlImg === apod.urlImg && isLoadedImg) {
@@ -182,11 +184,6 @@ const APOD: FC<{
       if (i) clearInterval(i);
     }
   }, [sizeOfImage]);
-
-  const dispatch = useDispatch();
-  const foo = useSelector((state: StateDate ) => state.selectedDate);
-  console.log(foo);
-  
   
 return (
   <div 
@@ -242,7 +239,7 @@ return (
                 apiBgOpacity.start({
                   reverse: true
                 });                 
-                dispatch({type: "UPDATE_SELECTED_DATE", payload: date})
+                dispatch(updateSelectedDate(date))
               }}
               selected={selectedDate}
               includeDateIntervals={[{ 

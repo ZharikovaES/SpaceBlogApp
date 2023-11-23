@@ -5,7 +5,7 @@ import Header from '../components/header/Header';
 import APOD from '../components/sections/apod/APOD';
 import NASAService from '../API/NASAService';
 import { IImageAPOD, IVideoAPOD, mediaType } from '../types/APOD';
-import { makeDateStore } from '../store/dateStore';
+import { makeDateStore } from '../store';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();  
