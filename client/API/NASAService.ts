@@ -1,10 +1,10 @@
 import axios from "axios";
-import { IAPOD, IImageAPOD, IVideoAPOD } from "../types/APOD";
+import { IAPOD, contentAPODType } from "../types/APOD";
 import TranslatorService from "./TranslatorService";
 
 export default class NASAService {
   //получение астрономического фото/видео дня
-  static async getAPOD(date: Date = new Date()): Promise<IImageAPOD | IVideoAPOD | null>{
+  static async getAPOD(date: Date = new Date()): Promise<contentAPODType | null>{
     try {
       const options: Intl.DateTimeFormatOptions = { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' };
       const arrDate = date.toLocaleString('en-US', options).split('/');

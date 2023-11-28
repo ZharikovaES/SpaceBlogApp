@@ -24,8 +24,7 @@ export default class TranslatorService {
   }
 
   //запрос перевода
-  static fetchTranslate(text: string) {
-    const TRANSLATE_GOOGLE_KEY = process.env.translateGoogleKey;
+  private static fetchTranslate(text: string) {
     const TRANSLATE_API_URL = process.env.translateApiUrl;
 
     if (!TRANSLATE_API_URL) throw new Error("TRANSLATE_API_URL is empty");    
@@ -47,7 +46,7 @@ export default class TranslatorService {
     });
   }
 
-  static convertTranslateValue(arrays: any[]): any[] {
+  private static convertTranslateValue(arrays: any[]): any[] {
     const result: any[] = [];
     arrays.forEach((array: any[]) => {
         const allStr = array?.[0]?.reduce((acc: string, el: any[]) => {
@@ -59,5 +58,4 @@ export default class TranslatorService {
 
     return result;
   }
-
 }

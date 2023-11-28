@@ -8,7 +8,7 @@ import { subYears } from "date-fns";
 import ru from 'date-fns/locale/ru';
 
 import { Lookup } from "@react-spring/types";
-import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType } from "../../../types/APOD";
+import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType, contentAPODType } from "../../../types/APOD";
 import { StateDate } from "../../../types/store/date";
 
 import { updateSelectedDate } from "../../../store/dateReducer";
@@ -24,7 +24,7 @@ registerLocale('ru', ru);
 
 const APOD: FC<{
   children: React.ReactNode
-  data: IImageAPOD | IVideoAPOD
+  data: contentAPODType
 }> = ({ children, data }) => {  
   const dispatch = useDispatch();  
 
@@ -35,8 +35,8 @@ const APOD: FC<{
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
   const [timeAnimationBg, setTimeAnimationBg] = useState(15);
   const [isLoadedImg, setLoadedImg] = useState(false);
-  const [apod, setAPOD] = useState<IImageAPOD | IVideoAPOD>(data);
-  const [hiddenApod, setHiddenAPOD] = useState<IImageAPOD | IVideoAPOD | null>(null);
+  const [apod, setAPOD] = useState<contentAPODType>(data);
+  const [hiddenApod, setHiddenAPOD] = useState<contentAPODType | null>(null);
   const [sizeOfImage, setSizeOfImage] = useState<{
     width: number,
     height: number

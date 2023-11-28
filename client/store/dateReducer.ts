@@ -1,23 +1,20 @@
-import { Action } from "../types/actions";
-import { StateDate } from "../types/store/date";
-
-const UPDATE_SELECTED_DATE = 'UPDATE_SELECTED_DATE';
-
+import { IUpdateSelectedDateAction } from "../types/actions";
+import { DateTypes, StateDate } from "../types/store/date";
 
 export const reducer = (state: StateDate = {
                                       selectedDate: getCurrentDate(), 
                                       currentDate: getCurrentDate().toISOString()
                                     }, 
-                                      action: Action) => {
+                        action: IUpdateSelectedDateAction) => {
   switch (action.type) {
-    case UPDATE_SELECTED_DATE:
+    case DateTypes.UPDATE_SELECTED_DATE:
       return { ...state, selectedDate: action.payload};
     default:
       return state;
   }
 }
 
-export const updateSelectedDate = (payload: any) : Action => ({type: UPDATE_SELECTED_DATE, payload})
+export const updateSelectedDate = (payload: Date) : IUpdateSelectedDateAction => ({type: DateTypes.UPDATE_SELECTED_DATE, payload})
 
 export const getCurrentDate = () : Date => {
   const options = { timeZone: 'America/New_York' };

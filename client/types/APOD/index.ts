@@ -12,6 +12,9 @@ export interface IVideoAPOD extends IAPOD {
   thumbnail_url: string,
   urlVideo: string,
 }
+
+export type contentAPODType = IImageAPOD | IVideoAPOD;
+
 export enum mediaType {
   IMAGE = "image",
   VIDEO = "video"
