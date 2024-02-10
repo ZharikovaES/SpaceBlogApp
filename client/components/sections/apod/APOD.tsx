@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import Image from "next/image";
 import { animated, AnimationResult, easings, SpringValue, useSpring } from "@react-spring/web";
-import { useDispatch, useSelector } from "react-redux";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { subYears } from "date-fns";
@@ -9,14 +8,14 @@ import ru from 'date-fns/locale/ru';
 
 import { Lookup } from "@react-spring/types";
 import { PositionBackground, IImageAPOD, IVideoAPOD, mediaType, contentAPODType } from "../../../types/APOD";
-import { StateDate } from "../../../types/store/date";
 
-import { updateSelectedDate } from "../../../store/dateReducer";
+import { updateSelectedDate } from "../../../store/apodSlice";
 import NASAService from "../../../API/NASAService";
 import Container from "../../layout/Container";
 import PopUpVideo from "../../pop-up/PopUpVideo";
 
 import classes from "./APOD.module.scss";
+import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 
 registerLocale('ru', ru);
 
@@ -26,10 +25,10 @@ const APOD: FC<{
   children: React.ReactNode
   data: contentAPODType
 }> = ({ children, data }) => {  
-  const dispatch = useDispatch();  
+  const dispatch = useAppDispatch();  
 
-  const selectedDate = useSelector((state: StateDate ) => state.selectedDate);
-  const currentDate = useSelector((state: StateDate ) => state.currentDate);
+  const selectedDate = new Date(useAppSelector(state => state.apod.selectedDate));
+  const currentDate = useAppSelector(state => state.apod.currentDate)
 
   const [isFinishedAnimation, setIsFinishedAnimation] = useState(false);
   const [isFinishedAnimationBg, setIsFinishedAnimationBg] = useState(false);
@@ -239,7 +238,7 @@ return (
                 apiBgOpacity.start({
                   reverse: true
                 });                 
-                dispatch(updateSelectedDate(date))
+                dispatch(updateSelectedDate(date.toISOString()))
               }}
               selected={selectedDate}
               includeDateIntervals={[{ 

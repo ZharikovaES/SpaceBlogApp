@@ -1,14 +1,17 @@
-import { Context, MakeStore } from 'next-redux-wrapper';
-import { legacy_createStore as createStore, Store } from 'redux';
-import { IUpdateSelectedDateAction } from '../types/actions';
-import { StateDate } from '../types/store/date';
-import { getCurrentDate, reducer } from './dateReducer';
+import { configureStore } from '@reduxjs/toolkit';
+import apodReducer from './apodSlice';
+import { createWrapper } from 'next-redux-wrapper';
 
-export const makeDateStore : MakeStore<Store<StateDate, IUpdateSelectedDateAction>> = (_: Context) => {
-  const currentDate = getCurrentDate();
-  const initialState: StateDate = {
-    selectedDate: currentDate,
-    currentDate: currentDate.toISOString()
-  };
-  return createStore(reducer, initialState);
+export const makeDateStore = () => {
+  return configureStore({
+    reducer: {
+      apod: apodReducer
+    }
+  });
 }
+
+export const wrapper = createWrapper<AppStore>(makeDateStore);
+
+export type AppStore = ReturnType<typeof makeDateStore>
+export type RootState = ReturnType<AppStore['getState']>
+export type AppDispatch = AppStore['dispatch']

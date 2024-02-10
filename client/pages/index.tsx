@@ -1,13 +1,11 @@
 import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 import Head from 'next/head';
-import withRedux from 'next-redux-wrapper';
 import Header from '../components/header/Header';
 import APOD from '../components/sections/apod/APOD';
 import NASAService from '../API/NASAService';
 import { IImageAPOD, IVideoAPOD, mediaType } from '../types/APOD';
-import { makeDateStore } from '../store';
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (_) => {
   const data: IImageAPOD | IVideoAPOD | null = await NASAService.getAPOD();  
 
   if (data) {
@@ -42,4 +40,4 @@ const Home: NextPage = ({ apod }: InferGetServerSidePropsType<typeof getServerSi
   )
 }
 
-export default withRedux(makeDateStore)(Home);
+export default Home;
